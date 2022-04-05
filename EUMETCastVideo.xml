@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<threadcount>8</threadcount>
+<pathlist>
+     <path>/mnt/nfs_eumetcast4T/received/bas/E1B-GEO-5/2022/04/04</path>
+</pathlist>
+<!--     H-000-MSG3__-MSG3_RSS____-_________-PRO______-201807190655-__ -->
+<!--     H-000-MSG4__-MSG4________-IR_016___-000001___-201807190700-C_ -->
+<!--     H-000-MSG1__-MSG1_IODC___-IR_039___-000005___-202203300700-C_ -->
+<!-- E1B-GEO-5  MSG3  RSS   9.5 MET_10 -->
+<!-- E1B-GEO-1  MSG1  IODC 41.5 MET_8  -->
+<!-- E1B-GEO-3  MSG4        0.0 MET_11 -->
+<pattern>H-000-MSG3__-MSG3_????___-??????___-??????___-????????????-?_</pattern>
+<singlefile></singlefile>
+<satname>MET_10</satname>
+<gamma>1.0</gamma>
+<rss>1</rss>
+<gshhs>
+     <gshhsoverlayfile>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/gshhs_h.b</gshhsoverlayfile>
+     <gshhsoverlayfile>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/wdb_borders_i.b</gshhsoverlayfile>
+     <gshhsoverlayfile>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/wdb_rivers_i.b</gshhsoverlayfile>
+     <gshhsglobe1On>1</gshhsglobe1On>
+     <gshhsglobe2On>1</gshhsglobe2On>
+     <gshhsglobe3On>0</gshhsglobe3On>
+</gshhs>
+<resolution>
+     <height>1080</height>
+     <width>1920</width>
+</resolution>
+<dayspectrum>
+     <dayred>IR_016</dayred>
+     <daygreen>VIS008</daygreen>
+     <dayblue>VIS006</dayblue>
+     <dayredinverse>0</dayredinverse>
+     <daygreeninverse>0</daygreeninverse>
+     <dayblueinverse>0</dayblueinverse>
+     <dayhrv>0</dayhrv>
+</dayspectrum>
+<nightspectrum>
+     <nightred>IR_087</nightred>
+     <nightgreen></nightgreen>
+     <nightblue></nightblue>
+     <nightredinverse>1</nightredinverse>
+     <nightgreeninverse>0</nightgreeninverse>
+     <nightblueinverse>0</nightblueinverse>
+</nightspectrum>
+<overlay>
+     <coff>1856</coff>
+     <loff>1856</loff>
+     <cfac>781648343</cfac>
+     <lfac>781648343</lfac>
+     <coffhrv>5566</coffhrv>
+     <loffhrv>5566</loffhrv>
+     <cfachrv>2344944937</cfachrv>
+     <lfachrv>2344944937</lfachrv>
+     <satlon>9.5</satlon>
+     <homelon>3.5537</homelon>
+     <homelat>50.8330</homelat>
+     <projectionoverlaycolor1>#afaf47</projectionoverlaycolor1>
+     <projectionoverlaycolor2>#898969</projectionoverlaycolor2>
+     <projectionoverlaycolor3>#54686d</projectionoverlaycolor3>
+     <projectionoverlaygridcolor>#8f8f8f</projectionoverlaygridcolor>
+     <overlayborder>1</overlayborder>
+     <overlaydate>1</overlaydate>
+     <overlaydatefontsize>20</overlaydatefontsize>
+</overlay>
+<projectiontype>GVP</projectiontype> <!-- General vertical projection  -->
+<gvpprojectionparameters>
+    <latitude>49.0</latitude>
+    <longitude>12.67</longitude>
+    <scale>0.26</scale>
+    <height>36000</height>
+    <gridonprojection>1</gridonprojection>
+    <falseeasting>0.0</falseeasting>
+    <falsenorthing>0.0</falsenorthing>
+</gvpprojectionparameters>
+<videooutputname>PROJ20220404Cor_GVP</videooutputname>
+</root>
