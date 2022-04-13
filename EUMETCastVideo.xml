@@ -11,14 +11,14 @@
 <!-- E1B-GEO-1  MSG1  IODC 41.5 MET_8  -->
 <!-- E1B-GEO-3  MSG4        0.0 MET_11 -->
 <pattern>H-000-MSG3__-MSG3_????___-??????___-??????___-????????????-?_</pattern>
-<singlefile></singlefile>
+<singleimage></singleimage>
 <satname>MET_10</satname>
 <gamma>1.0</gamma>
 <rss>1</rss>
 <gshhs>
-     <gshhsoverlayfile>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/gshhs_h.b</gshhsoverlayfile>
-     <gshhsoverlayfile>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/wdb_borders_i.b</gshhsoverlayfile>
-     <gshhsoverlayfile>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/wdb_rivers_i.b</gshhsoverlayfile>
+     <gshhsoverlayfile1>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/gshhs_h.b</gshhsoverlayfile1>
+     <gshhsoverlayfile2>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/wdb_borders_i.b</gshhsoverlayfile2>
+     <gshhsoverlayfile3>/media/hugo/Data-Linux/EUMETCastTools/gshhs2_3_7/wdb_rivers_i.b</gshhsoverlayfile3>
      <gshhsglobe1On>1</gshhsglobe1On>
      <gshhsglobe2On>1</gshhsglobe2On>
      <gshhsglobe3On>0</gshhsglobe3On>
@@ -74,5 +74,5 @@
     <falseeasting>0.0</falseeasting>
     <falsenorthing>0.0</falsenorthing>
 </gvpprojectionparameters>
-<videooutputname>PROJ20220404Cor_GVP</videooutputname>
+<videooutputname>PROJ</videooutputname>
 </root>

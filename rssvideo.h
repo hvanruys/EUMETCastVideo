@@ -1,6 +1,7 @@
 #ifndef XMLEXAMPLE_H
 #define XMLEXAMPLE_H
 #include <QPainter>
+#include <QUdpSocket>
 
 #include "MSG_data.h"
 #include "msgfileaccess.h"
@@ -28,7 +29,11 @@ public:
     void OverlayGeostationaryHRV(QPainter *paint, int leca, int lsla, int lwca, int lnla, int ueca, int usla, int uwca, int unla);
     void OverlayProjectionGVP();
     void OverlayDate(QImage *im, QString date);
+    void sendMessages(QString txt);
+
     XMLVideoReader *reader;
+    QUdpSocket *udpSocket;
+
 
 private:
 
@@ -66,6 +71,7 @@ private:
     void SetupContrastStretch(quint16 x1, quint16 y1, quint16 x2, quint16 y2);
     void checkAvailableSegments(QStringList *segs, QString date);
     void replenishSegmentsRss(QStringList *segs, QString date);
+    void replenishSegmentsFull(QStringList *segs, QString date);
     bool isSegmentAvailable(QString segmentstr, QStringList *segs, QTime time);
 
     double A1, B1, A2, B2, A3, B3;

@@ -34,12 +34,24 @@ RSSVideo::RSSVideo( QString xmlfile, QObject *parent ) : QObject(parent)
     OverlayProjectionGVP();
     // overlayimageProjection.save("overlayproj.png");
 
+    udpSocket = new QUdpSocket();
+
+
 }
 
 RSSVideo::~RSSVideo()
 {
 
 }
+
+void RSSVideo::sendMessages(QString txt)
+{
+
+    QByteArray ba = txt.toLocal8Bit();
+    this->udpSocket->writeDatagram(ba, QHostAddress("127.0.0.1"), 7755);
+
+}
+
 
 QVector<QString> RSSVideo::getDateVectorFromDir()
 {
@@ -248,7 +260,7 @@ void RSSVideo::compileImage(QString date, QString path, int imagenbr)
     int UNLA = 0;
 
 
-    qDebug() << "Start compileImage nbr " << imagenbr;
+    //sendMessages(QString("Start compileImage nbr %1").arg(imagenbr));
 
     if(reader->daykindofimage == "VIS_IR")
     {
@@ -316,7 +328,7 @@ void RSSVideo::compileImage(QString date, QString path, int imagenbr)
 
         if(llVIS_IR.count() == 0)
         {
-            qDebug() << "no segments found for 'VIS_IR'!";
+            sendMessages("Warning : no segments found for 'VIS_IR'!");
             return;
         }
         else
@@ -333,7 +345,7 @@ void RSSVideo::compileImage(QString date, QString path, int imagenbr)
         llHRV = getGeostationarySegments("HRV", path, reader->spectrum, fpattern);
         if(llHRV.count() == 0)
         {
-            qDebug() << "no segments found for 'HRV'!";
+            sendMessages("Warning : no segments found for 'HRV'!");
             return;
         }
         else
@@ -352,7 +364,7 @@ void RSSVideo::compileImage(QString date, QString path, int imagenbr)
         }
         catch( std::runtime_error &run )
         {
-            qDebug() << QString("Error : runtime error in reading prologue file : %1").arg(run.what());
+            sendMessages(QString("Error : runtime error in reading prologue file : %1").arg(run.what()));
         }
     }
 
@@ -365,7 +377,7 @@ void RSSVideo::compileImage(QString date, QString path, int imagenbr)
         }
         catch( std::runtime_error &run )
         {
-            qDebug() << QString("Error : runtime error in reading epilogue file : %1").arg(run.what());
+            sendMessages(QString("Error : runtime error in reading epilogue file : %1").arg(run.what()));
         }
         MSG_ActualL15CoverageHRV& cov = epidata.epilogue->product_stats.ActualL15CoverageHRV;
         LECA = cov.LowerEastColumnActual;
@@ -489,18 +501,16 @@ void RSSVideo::compileImage(QString date, QString path, int imagenbr)
 
         painter.end();
 
-        gvp->imageProjection->save(QString("proj%1.png").arg(imagenbr, 4, 10, QChar('0')));
+        QString prefixstr = reader->videooutputname;
+
+        if(reader->singleimage.length() > 0)
+            gvp->imageProjection->save("tempimages/" + QString(prefixstr + date + "_%1.png").arg(imagenbr, 4, 10, QChar('0')));
+        else
+            gvp->imageProjection->save("tempvideo/" + QString(prefixstr + "%1.png").arg(imagenbr, 4, 10, QChar('0')));
+
 
         delete gvp;
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -537,7 +547,10 @@ void RSSVideo::checkAvailableSegments(QStringList *segs, QString date)
 {
     int countspectrum = 0;
 
-    if(this->reader->brss && !this->reader->bhrv)
+    if(this->reader->bhrv)
+        return;
+
+    if(this->reader->brss)
     {
         for(int i = 0; i < this->reader->spectrum.count(); i++)
         {
@@ -549,9 +562,26 @@ void RSSVideo::checkAvailableSegments(QStringList *segs, QString date)
             return;
         else
         {
-            qDebug() << "should be " << countspectrum * 3 << " got " << segs->count();
+            //qDebug() << "should be " << countspectrum * 3 << " got " << segs->count();
             replenishSegmentsRss(segs, date);
         }
+    }
+    else
+    {
+        for(int i = 0; i < this->reader->spectrum.count(); i++)
+        {
+            if(this->reader->spectrum.at(i).length() > 0)
+                countspectrum++;
+        }
+
+        if(segs->count() == countspectrum * 8)
+            return;
+        else
+        {
+            qDebug() << "should be " << countspectrum * 3 << " got " << segs->count();
+            replenishSegmentsFull(segs, date);
+        }
+
     }
 }
 
@@ -562,6 +592,7 @@ void RSSVideo::replenishSegmentsRss(QStringList *segs, QString datestr)
     //0         1         2         3         4         5         6
     //0123456789012345678901234567890123456789012345678901234567890
     //H-000-MSG3__-MSG3_RSS____-IR_016___-000006___-202204040740-C_
+    //H-000-MSG4__-MSG4________-IR_016___-000001___-201807190700-C_
 
     QTime mytime(datestr.mid(8, 2).toInt(), datestr.mid(10, 2).toInt());
     for(int i = 0; i < this->reader->spectrum.count(); i++)
@@ -581,11 +612,48 @@ void RSSVideo::replenishSegmentsRss(QStringList *segs, QString datestr)
     }
 }
 
+void RSSVideo::replenishSegmentsFull(QStringList *segs, QString datestr)
+{
+    QString fpattern = reader->filepattern.replace(46, 12, datestr);
+    //H-000-MSG3__-MSG3_????___-??????___-??????___-????????????-?_
+    //0         1         2         3         4         5         6
+    //0123456789012345678901234567890123456789012345678901234567890
+    //H-000-MSG3__-MSG3_RSS____-IR_016___-000006___-202204040740-C_
+    //H-000-MSG4__-MSG4________-IR_016___-000001___-201807190700-C_
+
+    QTime mytime(datestr.mid(8, 2).toInt(), datestr.mid(10, 2).toInt());
+    for(int i = 0; i < this->reader->spectrum.count(); i++)
+    {
+        if(this->reader->spectrum.at(i).length() > 0)
+        {
+            fpattern = fpattern.replace(26, 6, this->reader->spectrum.at(i));
+            fpattern = fpattern.replace(18, 4, "____");
+            fpattern = fpattern.replace(36, 6, "000001");
+            fpattern = fpattern.replace(59, 1, "C");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000002");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000003");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000004");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000005");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000006");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000007");
+            isSegmentAvailable(fpattern, segs, mytime);
+            fpattern = fpattern.replace(36, 6, "000008");
+            isSegmentAvailable(fpattern, segs, mytime);
+        }
+    }
+}
+
 bool RSSVideo::isSegmentAvailable(QString segmentstr, QStringList *segs, QTime time)
 {
     if(!segs->contains(segmentstr, Qt::CaseInsensitive))
     {
-        QTime newtime = time.addSecs(- 5 * 60) ;
+        QTime newtime = time.addSecs(- (this->reader->brss ? 5 : 15) * 60) ;
 
         QString newsegmentstr = segmentstr.replace(54, 4, newtime.toString("HHmm"));
         segs->append(newsegmentstr);

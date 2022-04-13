@@ -53,8 +53,8 @@ void XMLVideoReader::readVideoParameters()
             readResolution();
         else if(reader.name() == "pattern")
             this->filepattern = reader.readElementText();
-        else if(reader.name() == "singlefile")
-            this->singlefile = reader.readElementText();
+        else if(reader.name() == "singleimage")
+            this->singleimage = reader.readElementText();
         else if(reader.name() == "satname")
             this->satname = reader.readElementText();
         else if(reader.name() == "gamma")
@@ -120,7 +120,17 @@ void XMLVideoReader::readPaths()
 void XMLVideoReader::readGshhs()
 {
     while(reader.readNextStartElement()){
-        if(reader.name() == "gshhsoverlayfile")
+        if(reader.name() == "gshhsoverlayfile1")
+        {
+            QString str = reader.readElementText();
+            gshhsoverlayfiles.append(str);
+        }
+        else if(reader.name() == "gshhsoverlayfile2")
+        {
+            QString str = reader.readElementText();
+            gshhsoverlayfiles.append(str);
+        }
+        else if(reader.name() == "gshhsoverlayfile3")
         {
             QString str = reader.readElementText();
             gshhsoverlayfiles.append(str);

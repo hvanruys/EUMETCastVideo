@@ -60,7 +60,7 @@ public:
     bool brss;
     int threadcount;
 
-    QString singlefile;
+    QString singleimage;
     QString projectiontype;
     QString videooutputname;
     //GVP
